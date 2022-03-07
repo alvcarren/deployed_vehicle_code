@@ -5,7 +5,7 @@
 
     <?ignore
     <param name="m"             type="double"   value="2.424" />
-    <param name="rho"             type="double"   value="1.225" />    
+    <param name="rho"             type="double"   value="1.225" />
     <param name="lr"            type="double"   value="0.1203" />
     <param name="lf"            type="double"   value="0.132" />
     <param name="Cm0"            type="double"   value="10.1305" />
@@ -19,13 +19,13 @@
     ?>
 
     <!-- Variables limits-->
-    
-    <!-- without integral action -->    
+
+    <!-- without integral action -->
     <param name="max_vel"           type="double"   value="2.0" />
     <param name="min_vel"           type="double"   value="-0.1" />
     <param name="dutycycle_max"     type="double"   value="1.0" />
     <param name="dutycycle_min"     type="double"   value="0.01" />
-    
+
 
     <!-- with integral action -->
     <?ignore
@@ -55,7 +55,7 @@
 
 
     <!-- CONTROL -->
-    
+
     <node pkg="controller"      type="planner_controller.py"    name="control" output="screen">
 
         <param name="Horizon"           type="int"      value="20" />
@@ -69,16 +69,16 @@
          <param name="non_uniform_sampling"          type="bool"      value="0" />
     </node>
 
-    <!--node pkg="planner" type="mpc_planner.py" name="trajectory_planner" output="screen"> 
-         <param name="Planning_Track"   type="int"      value="1" /> 
+    <!--node pkg="planner" type="mpc_planner.py" name="trajectory_planner" output="screen">
+         <param name="Planning_Track"   type="int"      value="1" />
          <param name="max_vel"          type="double"   value="4.4" />
          <param name="min_vel"          type="double"   value="-0.1" />
-         <param name="N"                type="int"      value="40" /> 
-         <param name="Hz"        type="int"      value="25" /> 
+         <param name="N"                type="int"      value="40" />
+         <param name="Hz"        type="int"      value="25" />
          <param name="halfWidth"        type="double"   value="0.25" />
          <param name="Visualization"    type="int"      value="1" />
          <param name="Testing"          type="int"      value="1" />
          <param name="save_output"          type="bool"      value="0" />
-    </node-->  
+    </node-->
 
 </launch>

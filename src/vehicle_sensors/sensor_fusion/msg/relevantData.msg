@@ -1,0 +1,16 @@
+int64 timestamp_ms
+float64 X
+float64 Y
+float64 roll
+float64 yaw
+float64 pitch
+float64 vx
+float64 vy
+float64 yaw_rate
+float64 ax
+float64 ay
+float64 s
+float64 x
+float64 y
+float32 accel
+float32 steering

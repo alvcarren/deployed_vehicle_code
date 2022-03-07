@@ -32,7 +32,7 @@ from std_msgs.msg import Bool, Float32
 ### under development ###
 # class plot_data():
 
-#     def __init__ 
+#     def __init__
 #     # Create figure for plotting
 # fig = plt.figure()
 # ax = fig.add_subplot(1, 1, 1)
@@ -105,7 +105,7 @@ class ImuEncClass(object):
         self.ph    = 0.0
         self.qh    = 0.0
         self.rh    = 0.0
-        
+
         self.qx     = 0.0
         self.qy    = 0.0
         self.qz    = 0.0
@@ -119,7 +119,7 @@ class ImuEncClass(object):
                                 cos(self.yaw)*cos(self.roll) , sin(self.yaw)*sin(self.pitch)*cos(self.roll) - \
                                 cos(self.yaw)*sin(self.roll)], \
                                 [-sin(self.pitch) , cos(self.pitch)*sin(self.roll) , cos(self.pitch)*cos(self.roll)]])
-                                
+
         self.ax_window = 1
         self.ay_window = 1
         self.az_window = 1
@@ -137,7 +137,7 @@ class ImuEncClass(object):
         self.co_ax      = 0.0
         self.co_ay      = 0.0
         self.co_az      = 0.0
-        
+
         self.co_vx      = 0.0
         self.co_vy      = 0.0
 
@@ -171,9 +171,9 @@ class ImuEncClass(object):
     def coordinate_transform(self):
 
         # https://www.basicairdata.eu/knowledge-center/compensation/inertial-measurement-unit-placement/
-        
+
         ############ IMU to Body frame transformation ##########
-        # dp = (self.p-self.ph)/(self.curr_time-self.prev_time) 
+        # dp = (self.p-self.ph)/(self.curr_time-self.prev_time)
         # dq = (self.q-self.qh)/(self.curr_time-self.prev_time)
         # dr = (self.r-self.rh)/(self.curr_time-self.prev_time)
 
@@ -181,9 +181,9 @@ class ImuEncClass(object):
         # y_loc = 6.1270*10**(-3)
         # z_loc = -0.2799*10**(-3)
         # self.ax = self.ax + x_loc*(self.q**2-self.r**2) - y_loc*(self.p*self.q - self.p-dr) - z_loc*(self.p*self.r - dq)
-        # self.ay = self.ay - x_loc*(self.p*self.q + dr) + y_loc*(self.p**2 + self.r**2) - z_loc*(self.q*self.r - dp)  
-        # self.az = self.az - x_loc*(self.p*self.r - dq) - y_loc*(self.q*self.r + dp) + z_loc*(self.p**2 + self.q**2)  
-        
+        # self.ay = self.ay - x_loc*(self.p*self.q + dr) + y_loc*(self.p**2 + self.r**2) - z_loc*(self.q*self.r - dp)
+        # self.az = self.az - x_loc*(self.p*self.r - dq) - y_loc*(self.q*self.r + dp) + z_loc*(self.p**2 + self.q**2)
+
 
         ############ Body frame to world frame transformation ##########
         # http://planning.cs.uiuc.edu/node102.html
@@ -194,7 +194,7 @@ class ImuEncClass(object):
                                 cos(self.yaw)*cos(self.roll) , sin(self.yaw)*sin(self.pitch)*cos(self.roll) - \
                                 cos(self.yaw)*sin(self.roll)], \
                                 [-sin(self.pitch) , cos(self.pitch)*sin(self.roll) , cos(self.pitch)*cos(self.roll)]])
-        
+
         ### gravity compensation
         # http://www.varesano.net/blog/fabio/simple-gravity-compensation-9-dom-imus
         gravity = np.dot(self.R_ypr.T,np.array([0, 0, self.az]).T)
@@ -215,33 +215,33 @@ class ImuEncClass(object):
         self.ax     = data.linear.x #- self.ax_offset
         self.ay     = data.linear.y #- self.ay_offset
         self.az     = data.linear.z #- self.az_offset
-        
+
         self.twist_hist["ax"].append(self.ax)
         self.twist_hist["ay"].append(self.ay)
         self.twist_hist["az"].append(self.az)
-        
+
         if (len(self.twist_hist["ax"])>self.ax_window):
-            self.ax     = np.mean(np.array(self.twist_hist["ax"][-1*self.ax_window:])) 
+            self.ax     = np.mean(np.array(self.twist_hist["ax"][-1*self.ax_window:]))
             self.ay     = np.mean(np.array(self.twist_hist["ay"][-1*self.ay_window:]))
             self.az     = np.mean(np.array(self.twist_hist["az"][-1*self.az_window:]))
 
 
         if self.transform == True:
             self.coordinate_transform()
-        
+
 
         self.vx     = self.vx+self.ax*(self.curr_time-self.prev_time)  # from IMU
         self.vy     = self.vy+self.ay*(self.curr_time-self.prev_time)
 
         self.X = self.X +  self.vx*(self.curr_time-self.prev_time)
         self.Y = self.Y +  self.vy*(self.curr_time-self.prev_time)
-        
+
         self.psiDot = data.angular.z - self.psiDot_offset# from IMU
 
         # p is called roll rate, q pitch rate and r yaw rate.
-        self.p = data.angular.x    
-        self.q = data.angular.y  
-        self.r = data.angular.z   
+        self.p = data.angular.x
+        self.q = data.angular.y
+        self.r = data.angular.z
         self.ph = self.p
         self.qh = self.q
         self.rh = self.r
@@ -268,8 +268,8 @@ class ImuEncClass(object):
 
 
         # if (len(self.pose_hist["yaw"])>self.ax_window):
-        #     self.yaw     = np.mean(np.array(self.pose_hist["yaw"][-1*self.ax_window:])) 
-            
+        #     self.yaw     = np.mean(np.array(self.pose_hist["yaw"][-1*self.ax_window:]))
+
 
 
         self.pose_hist["timestamp_ms"].append(self.curr_time)
@@ -277,7 +277,7 @@ class ImuEncClass(object):
         self.pose_hist["pitch"].append(self.pitch)
         self.pose_hist["yaw"].append(self.yaw)
         self.prev_time = self.curr_time
-        
+
 
 
     def RPM_callback(self, data):
@@ -296,11 +296,11 @@ class ImuEncClass(object):
         ax_info = np.array(self.twist_hist["ax"])
         ay_info = np.array(self.twist_hist["ay"])
         az_info = np.array(self.twist_hist["az"])
-        
+
         vx_info = np.array(self.twist_hist["vx"])
         vy_info = np.array(self.twist_hist["vy"])
         yaw_info = np.array(self.pose_hist["yaw"])
-        
+
         self.yaw_offset     = np.mean(pose_info)
         self.psiDot_offset  = np.mean(pisDot_info)
         self.ax_offset      = np.mean(ax_info)
@@ -408,22 +408,22 @@ class KeyTeleop():
 
     def __init__(self, interface):
         self._interface = interface
-        
+
         # self._pub_cmd = rospy.Publisher('key_vel', Twist)
-        
+
         self.control_hist = []
 
         self.time0 = rospy.get_time()
 
-        
+
         ##################### control command publisher ######################
         self.accel_commands     = rospy.Publisher('control/accel', Float32, queue_size=1)
         self.steering_commands  = rospy.Publisher('control/steering', Float32, queue_size=1)
         self.controller_Flag    = rospy.Publisher('controller_flag', Bool, queue_size=1)
 
-        self.past_linear = 0.0 
-        self.past_angular = 0.0 
-        
+        self.past_linear = 0.0
+        self.past_angular = 0.0
+
 
         # self.imu_vx  = rospy.Publisher('imu_vx', Float32, queue_size=1)
         # self.imu_vy  = rospy.Publisher('imu_vy', Float32, queue_size=1)
@@ -438,21 +438,21 @@ class KeyTeleop():
         # self.roll  = rospy.Publisher('imu_roll', Float32, queue_size=1)
         # self.yaw  = rospy.Publisher('imu_yaw', Float32, queue_size=1)
         # self.pitch  = rospy.Publisher('imu_pitch', Float32, queue_size=1)
-        
+
         # self.imu_wz  = rospy.Publisher('imu_wx', Float32, queue_size=1)
-        
+
 
         ##################### sensor subscriber ################################
         # self.imu_enc = ImuEncClass(self.time0)
 
         # rospy.sleep(5)
         # print ("self.imu_enc number",len(self.imu_enc.twist_hist["vx"]))
-        # self.imu_enc.calibrate_imu()      
+        # self.imu_enc.calibrate_imu()
         self.record_data = False
         self.record_data = rospy.get_param('keyboard_control/record_data')
-        
+
         self.control_commands_his  = {"real_timestamp_ms":[],"timestamp_ms":[],"acceleration":[],"steering":[]}
-        
+
         self._hz = rospy.get_param('~hz', 1/0.033)
 
         self._num_steps = rospy.get_param('~turbo/steps', 1.01)
@@ -475,13 +475,13 @@ class KeyTeleop():
         self._angular = 0
 
         rate = rospy.Rate(self._hz)
-  
-                    
+
+
         while True:
             keycode = self._interface.read_key()
             if keycode:
                 if self._key_pressed(keycode):
-                    
+
                     self._publish()
                     # print (self.imu_enc.vx,"self.imu_enc.vx")
             else:
@@ -516,7 +516,7 @@ class KeyTeleop():
         }
         if keycode in movement_bindings:
             acc = movement_bindings[keycode]
-            
+
             ok = False
             if acc[0]:
                 linear = self._linear + acc[0]*dt*1.0
@@ -556,21 +556,21 @@ class KeyTeleop():
 
         twist = self._get_twist(self._linear, self._angular)
         # self._pub_cmd.publish(twist)
-        
+
         self.time1 = rospy.get_time()
         # print ("time at start publishing",self.time1-self.time0)
 
-        if  (self.past_linear != self._linear): 
-        
+        if  (self.past_linear != self._linear):
+
             self.accel_commands.publish(self._linear)
 
-        if (self.past_angular != self._angular): 
- 
+        if (self.past_angular != self._angular):
+
             self.steering_commands.publish(self._angular)
 
-        self.past_linear = self._linear 
-        self.past_angular = self._angular 
-        
+        self.past_linear = self._linear
+        self.past_angular = self._angular
+
         # self.imu_vx.publish(self.imu_enc.vx)
         # self.imu_vy.publish(self.imu_enc.vy)
         # self.imu_X.publish(self.imu_enc.X)
@@ -591,18 +591,18 @@ class KeyTeleop():
         # self.control_commands_his["steering"]. append(self._angular)
 
     def save_data(self):
-        path = ('/').join(__file__.split('/')[:-2]) + '/data/' 
-        
+        path = ('/').join(__file__.split('/')[:-2]) + '/data/'
+
         now = datetime.datetime.now()
         path = path + now.strftime("d%d_m%m_y%Y/")
         dt_string = now.strftime("d%d_m%m_y%Y_hr%H_min%M_sec%S")
-        
+
         control_path = path + 'control_his_'+ dt_string
         print('control save path and file:    ', control_path)
 
         imu_enc_pose_path = path + 'imu_enc_pose_his_'+ dt_string
         imu_enc_twist_path = path + 'imu_enc_twist_his_'+ dt_string
-        
+
         if not os.path.exists(path):
             os.makedirs(path)
         # print ("self.pose_hist", self.imu_enc.pose_hist)
@@ -610,7 +610,7 @@ class KeyTeleop():
         np.save(control_path,self.control_commands_his)
         np.save(imu_enc_pose_path,self.imu_enc.pose_hist)
         np.save(imu_enc_twist_path,self.imu_enc.twist_hist)
-        
+
         # print ("self.twist_hist", self.imu_enc.twist_hist)
         # print ("self.imu_enc.vx", self.imu_enc.vx)
         # print ("control_his",self.control_commands_his)
@@ -618,12 +618,12 @@ class KeyTeleop():
         # np.save(imu_enc_twist_path,self.twist_hist)
     # def saveHistory(self):
     #     data = {'real_time':real_time_his,'timestamp_ms':self.time_his,'x_his':self.x_his,'y_his':self.y_his,'psi_his':self.psi_his,'vx_his':self.vx_his,'vy_his':self.vy_his,'psiDot_his':self.psiDot_his,'noise_hist':self.noise_hist}
-    #     path = ('/').join(__file__.split('/')[:-2]) + '/data/' 
-        
+    #     path = ('/').join(__file__.split('/')[:-2]) + '/data/'
+
     #     now = datetime.datetime.now()
     #     path = path + now.strftime("d%d_m%m_y%Y/")
     #     dt_string = now.strftime("d%d_m%m_y%Y_hr%H_min%M_sec%S")
-        
+
     #     simulator_path = path + 'vehicle_simulator_his_'+ dt_string
 
     #     if not os.path.exists(path):

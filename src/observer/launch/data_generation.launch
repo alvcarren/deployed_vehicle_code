@@ -37,7 +37,6 @@
     <!-- switching  LQR type -->
 
 
-
     <group if="$(arg SWITCHING_LQR)">
         <node pkg="observer" type="switching_lqr_old.py" name="switching_lqr_observer" output="screen">
 
@@ -123,8 +122,9 @@
 
         </node>
     </group>
-
     <node pkg="observer" type="record_relevant_data.py" name="relevant_data_recorder" output="screen">
+    </node>
+    <node pkg="observer" type="random_input_generation.py" name="random_input_generation" output="screen">
     </node>
     <!-- SIMPLE LQR -->
     <group unless="$(arg SWITCHING_LQR)">
